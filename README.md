@@ -6,11 +6,7 @@
 
 A lightweight clipboard history manager for macOS, inspired by Windows 11's clipboard menu (Win+V). Lives in your menu bar and gives you instant access to your clipboard history.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/status-beta-yellow" alt="Status: Beta">
-</p>
-
-## ✨ Features
+## Features
 
 - **Global Hotkey** — Press `⌘⇧V` to open clipboard history from anywhere
 - **Text & Image Support** — Stores both text snippets and images with thumbnails
@@ -21,12 +17,12 @@ A lightweight clipboard history manager for macOS, inspired by Windows 11's clip
 - **Persistent History** — Saved across app restarts
 - **Optimized** — Lazy image loading, compressed storage, low memory footprint
 
-## 📦 Installation
+## Installation
 
 ### From Source
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/Clipboard.git
+git clone https://github.com/Jonathanthedeveloper/Clipboard.git
 cd Clipboard
 open Clipboard.xcodeproj
 ```
@@ -39,7 +35,7 @@ open Clipboard.xcodeproj
 - macOS 26.0+ (Tahoe)
 - Xcode 16+ (for building)
 
-## 🔐 Permissions
+## Permissions
 
 The app requires **Accessibility** permission for:
 - Global hotkey (`⌘⇧V`)
@@ -51,7 +47,7 @@ The app requires **Accessibility** permission for:
 3. Enable the checkbox
 4. Restart the app
 
-## ⌨️ Usage
+## Usage
 
 | Action | Shortcut |
 |--------|----------|
@@ -72,7 +68,7 @@ Use these shortcuts to capture screenshots directly to clipboard:
 
 > **Tip:** In Screenshot.app (`⌘⇧5`) → Options → Save to → Clipboard
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 Clipboard/
@@ -84,16 +80,15 @@ Clipboard/
 └── ImageCache.swift          # LRU image cache
 ```
 
-## 🗺️ Roadmap
+## Roadmap
 
-- [ ] Customizable hotkey
-- [ ] Sync across devices
-- [ ] Rich content (GIFs, files)
-- [ ] Image previews
-- [ ] Context menu actions
-- [ ] Menu bar icon customization
+- [ ] Smart search with regex support
+- [ ] Paste stack (sequential copy/paste)
+- [ ] Text scrubbing (strip formatting, trim whitespace)
+- [ ] Hotkey-based item selection (Cmd+1..9)
+- [ ] Snippets and text expansion support
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
 
@@ -102,13 +97,6 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
 3. Make your changes
 4. Submit a pull request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License — see [LICENSE](LICENSE) for details.
-
----
-
-<p align="center">
-  Made with ❤️ for macOS
-</p>
-
