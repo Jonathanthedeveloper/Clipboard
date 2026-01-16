@@ -5,9 +5,9 @@
 //  Created by Jonathan Amobi on 15/01/2026.
 //
 
-import SwiftUI
 import AppKit
 import Combine
+import SwiftUI
 
 @MainActor
 class ClipboardManager: ObservableObject {
@@ -22,7 +22,9 @@ class ClipboardManager: ObservableObject {
     private var pendingSave = false
 
     private var historyURL: URL {
-        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        let appSupport = FileManager.default.urls(
+            for: .applicationSupportDirectory, in: .userDomainMask
+        ).first!
         let dir = appSupport.appendingPathComponent("Clipboard", isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir.appendingPathComponent("history.json")
@@ -35,11 +37,12 @@ class ClipboardManager: ObservableObject {
 
     func startPolling() {
         if timer != nil { return }
-        timer = Timer.scheduledTimer(timeInterval: 1.0,
-                                     target: self,
-                                     selector: #selector(timerFired(_:)),
-                                     userInfo: nil,
-                                     repeats: true)
+        timer = Timer.scheduledTimer(
+            timeInterval: 1.0,
+            target: self,
+            selector: #selector(timerFired(_:)),
+            userInfo: nil,
+            repeats: true)
         timer?.tolerance = 0.2
     }
 
@@ -91,7 +94,7 @@ class ClipboardManager: ObservableObject {
 
     func pasteIntoFrontmostApp() {
         let src = CGEventSource(stateID: .hidSystemState)
-        let keyDown = CGEvent(keyboardEventSource: src, virtualKey: 9, keyDown: true) // 'v'
+        let keyDown = CGEvent(keyboardEventSource: src, virtualKey: 9, keyDown: true)  // 'v'
         keyDown?.flags = .maskCommand
         keyDown?.post(tap: .cghidEventTap)
         let keyUp = CGEvent(keyboardEventSource: src, virtualKey: 9, keyDown: false)
@@ -126,15 +129,17 @@ class ClipboardManager: ObservableObject {
     }
 
     // MARK: - Private
-    
+
     private func addText(_ text: String) {
-        let item = ClipboardItem(id: UUID(), kind: .text, text: text, imageData: nil, dateAdded: Date(), pinned: false)
+        let item = ClipboardItem(
+            id: UUID(), kind: .text, text: text, imageData: nil, dateAdded: Date(), pinned: false)
         insertDedup(item)
     }
 
     private func addImage(_ image: NSImage) {
         guard let data = compressedImageData(from: image) else { return }
-        let item = ClipboardItem(id: UUID(), kind: .image, text: nil, imageData: data, dateAdded: Date(), pinned: false)
+        let item = ClipboardItem(
+            id: UUID(), kind: .image, text: nil, imageData: data, dateAdded: Date(), pinned: false)
         insertDedup(item)
     }
 
@@ -151,23 +156,27 @@ class ClipboardManager: ObservableObject {
     private func readImageFromPasteboard() -> NSImage? {
         // PNG
         if let pngData = pasteboard.data(forType: .png),
-           let image = NSImage(data: pngData) {
+            let image = NSImage(data: pngData)
+        {
             return image
         }
-        
+
         // TIFF
         if let tiffData = pasteboard.data(forType: .tiff),
-           let image = NSImage(data: tiffData) {
+            let image = NSImage(data: tiffData)
+        {
             return image
         }
-        
+
         // Image objects
         if pasteboard.canReadItem(withDataConformingToTypes: NSImage.imageTypes),
-           let images = pasteboard.readObjects(forClasses: [NSImage.self], options: nil) as? [NSImage],
-           let image = images.first {
+            let images = pasteboard.readObjects(forClasses: [NSImage.self], options: nil)
+                as? [NSImage],
+            let image = images.first
+        {
             return image
         }
-        
+
         // File URLs
         if let urls = pasteboard.readObjects(forClasses: [NSURL.self], options: nil) as? [URL] {
             for url in urls {
@@ -179,13 +188,14 @@ class ClipboardManager: ObservableObject {
                 }
             }
         }
-        
+
         return nil
     }
 
     private func compressedImageData(from image: NSImage) -> Data? {
         guard let tiffData = image.tiffRepresentation,
-              let bitmap = NSBitmapImageRep(data: tiffData) else {
+            let bitmap = NSBitmapImageRep(data: tiffData)
+        else {
             return nil
         }
         // Use JPEG at 80% quality for better compression
@@ -195,17 +205,17 @@ class ClipboardManager: ObservableObject {
     private func saveHistoryThrottled() {
         guard !pendingSave else { return }
         pendingSave = true
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?.pendingSave = false
             self?.saveHistory()
         }
     }
-    
+
     func saveHistory() {
-        let itemsToSave = self.items
+        let itemsToSave = self.items.filter { $0.pinned }
         let urlToSave = self.historyURL
-        
+
         DispatchQueue.global(qos: .utility).async {
             do {
                 let data = try JSONEncoder().encode(itemsToSave)
