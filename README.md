@@ -1,7 +1,7 @@
 # Clipboard
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![macOS](https://img.shields.io/badge/macOS-26.0+-black.svg)](https://www.apple.com/macos/)
+[![macOS](https://img.shields.io/badge/macOS-14.0+-black.svg)](https://www.apple.com/macos/)
 [![Swift](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org/)
 
 A lightweight clipboard history manager for macOS, inspired by Windows 11's clipboard menu (Win+V). Lives in your menu bar and gives you instant access to your clipboard history.
@@ -32,7 +32,7 @@ open Clipboard.xcodeproj
 
 ### Requirements
 
-- macOS 26.0+ (Tahoe)
+- macOS 14.0+ (Sonoma)
 - Xcode 16+ (for building)
 
 ## Permissions

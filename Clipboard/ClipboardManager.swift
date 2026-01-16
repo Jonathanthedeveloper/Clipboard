@@ -11,6 +11,7 @@ import Combine
 
 @MainActor
 class ClipboardManager: ObservableObject {
+    static let shared = ClipboardManager()
     @Published var items: [ClipboardItem] = []
 
     private let pasteboard = NSPasteboard.general
@@ -201,7 +202,7 @@ class ClipboardManager: ObservableObject {
         }
     }
     
-    private func saveHistory() {
+    func saveHistory() {
         let itemsToSave = self.items
         let urlToSave = self.historyURL
         

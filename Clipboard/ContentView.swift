@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var manager = ClipboardManager()
+    @ObservedObject var manager = ClipboardManager.shared
     @State private var searchText = ""
     @State private var revealedItemId: UUID? = nil
     @State private var selectedIndex: Int = 0
@@ -230,7 +230,15 @@ struct ClipboardCard: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .glassEffect(in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            Group {
+                if #available(macOS 26.0, *) {
+                    AnyView(EmptyView().glassEffect(in: RoundedRectangle(cornerRadius: 10, style: .continuous)))
+                } else {
+                    AnyView(EmptyView())
+                }
+            }
+            .modifier(EmptyModifier()) // To keep the modifier chain valid
+            
             .help("Paste")
             
             Button(action: onDelete) {
@@ -243,7 +251,15 @@ struct ClipboardCard: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .glassEffect(in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            Group {
+                if #available(macOS 26.0, *) {
+                    AnyView(EmptyView().glassEffect(in: RoundedRectangle(cornerRadius: 10, style: .continuous)))
+                } else {
+                    AnyView(EmptyView())
+                }
+            }
+            .modifier(EmptyModifier()) // To keep the modifier chain valid
+            
             .help("Delete")
         }
         .frame(height: 72)
@@ -382,8 +398,15 @@ struct IconButton: View {
                 .background(
                     Group {
                         if isHovered {
-                            Color.clear
-                                .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 6, style: .continuous))
+                            Group {
+                                if #available(macOS 26.0, *) {
+                                    Color.clear
+                                        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 6, style: .continuous))
+                                } else {
+                                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                        .fill(Color.secondary.opacity(0.08))
+                                }
+                            }
                         } else {
                             Color.clear
                         }
